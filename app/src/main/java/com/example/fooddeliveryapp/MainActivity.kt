@@ -3,9 +3,7 @@ package com.example.fooddeliveryapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -61,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Destinations.Detail)
                         {
-                            DetailsScreen(navController = navController)
+                            DetailScreen(navController = navController)
                         }
 
                     })
@@ -159,13 +157,13 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun DetailsScreen(navController: NavController) {
+fun DetailScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(start = 30.dp, top = 48.dp, end = 30.dp),
-        contentAlignment = Alignment.Center
+            .padding(start = 30.dp, top = 48.dp, end = 30.dp)
+
     )
     {
         val data =
@@ -175,7 +173,13 @@ fun DetailsScreen(navController: NavController) {
             Text(text = data.title)
         } else {
             // TODO: just design
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(
+                        rememberScrollState()
+                    )
+            ) {
                 DetailHeader()
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -230,7 +234,7 @@ fun DetailHeader() {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        BoxWithRes(resId = R.drawable.menu, description = "Menu")
+        BoxWithRes(resId = R.drawable.arrow_left, description = "Left")
 
         Box(
             modifier = Modifier
@@ -241,7 +245,9 @@ fun DetailHeader() {
                 ), contentAlignment = Alignment.Center
         )
         {
-            Box(modifier = Modifier.size(24.dp))
+            Box(
+                modifier = Modifier.size(24.dp)
+            )
             {
                 Icon(
                     painter = painterResource(id = R.drawable.bag),
@@ -569,6 +575,6 @@ fun PopularItem(popularData: PopularData, navController: NavController) {
 fun DefaultPreview() {
     FoodDeliveryAppTheme {
         val navController = rememberNavController()
-        HomeScreen(navController = navController)
+        DetailScreen(navController = navController)
     }
 }
