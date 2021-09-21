@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FoodDeliveryAppTheme {
-
+                HomeScreen()
             }
         }
     }
@@ -73,6 +74,53 @@ fun HomeScreen() {
                     CategoryData(
                         redId = R.drawable.drinks,
                         title = "Drinks"
+                    )
+                )
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = "Popular",
+                style = Typography.body1,
+                fontSize = 22.sp,
+                color = BlackTextColor
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            PopularList(
+                popularList = listOf(
+                    PopularData(
+                        R.drawable.salad_pesto_pizza,
+                        title = "Salad Pesto Pizza",
+                        description = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+                        price = 10.55,
+                        calori = 540.0,
+                        scheduleTime = 20.0,
+                        rate = 5.0,
+                        ingradients = listOf(
+                            R.drawable.ing1,
+                            R.drawable.ing2,
+                            R.drawable.ing3,
+                            R.drawable.ing4,
+                            R.drawable.ing5,
+                        )
+
+                    ),
+                    PopularData(
+                        R.drawable.primavera_pizza,
+                        title = "Primavera",
+                        description = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+                        price = 12.55,
+                        calori = 440.0,
+                        scheduleTime = 30.0,
+                        rate = 4.5,
+                        ingradients = listOf(
+                            R.drawable.ing1,
+                            R.drawable.ing2,
+                            R.drawable.ing3,
+                            R.drawable.ing4,
+                            R.drawable.ing5,
+                        )
+
                     )
                 )
             )
@@ -237,7 +285,7 @@ fun CategoryItem(categoryData: CategoryData, selectedIndex: MutableState<Int>, i
             .background(
                 if (selectedIndex.value == index) Yellow500 else CardItemBg
             ), contentAlignment = Alignment.Center
-    )  {
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Icon(
@@ -255,6 +303,135 @@ fun CategoryItem(categoryData: CategoryData, selectedIndex: MutableState<Int>, i
                 color = if (selectedIndex.value == index) Color.White else BlackTextColor
             )
         }
+    }
+}
+
+@Composable
+fun PopularList(popularList: List<PopularData>) {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(popularList.size) { index ->
+            PopularItem(popularData = popularList[index])
+        }
+    }
+}
+
+@Composable
+fun PopularItem(popularData: PopularData) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(176.dp)
+
+    )
+    {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(176.dp)
+                .padding(end = 13.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(
+                    CardItemBg
+                )
+        )
+        Column(modifier = Modifier.padding(start = 20.dp, top = 20.dp)) {
+
+            Box(
+                modifier = Modifier.height(40.dp), contentAlignment = Alignment.Center
+            )
+            {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.crown),
+                        contentDescription = "Crown",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(11.dp))
+
+                    Text(
+                        text = "Best Selling",
+                        style = Typography.h5,
+                        fontSize = 14.sp,
+                        color = TextColor
+                    )
+                }
+
+            }
+
+            Box(modifier = Modifier.height(40.dp), contentAlignment = Alignment.Center)
+            {
+                Text(
+                    text = popularData.title,
+                    style = Typography.body1,
+                    fontSize = 18.sp,
+                    color = BlackTextColor
+                )
+            }
+            Box(modifier = Modifier.height(40.dp), contentAlignment = Alignment.Center)
+            {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Text(
+                        text = "$",
+                        style = Typography.body1,
+                        fontSize = 14.sp,
+                        color = Orange500
+                    )
+                    Text(
+                        text = "${popularData.price}",
+                        style = Typography.body1,
+                        fontSize = 20.sp,
+                        color = BlackTextColor
+                    )
+                }
+            }
+        }
+        Box(
+            modifier =
+            Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomStart),
+        )
+        {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 60.dp, height = 40.dp)
+                        .clip(RoundedCornerShape(bottomStart = 18.dp, topEnd = 18.dp))
+                        .background(Yellow500),
+                    contentAlignment = Alignment.Center
+                )
+                {
+                    Icon(
+                        painter = painterResource(id = R.drawable.add),
+                        contentDescription = "Add",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                }
+                Spacer(modifier = Modifier.width(48.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.star),
+                        contentDescription = "Star",
+                        modifier = Modifier.size(16.dp),
+                        tint = BlackTextColor
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "${popularData.rate}", style = Typography.body1, color = BlackTextColor)
+                }
+
+            }
+        }
+        Image(
+            painter = painterResource(id = popularData.resId),
+            contentDescription = popularData.title,
+            modifier = Modifier
+                .size(156.dp)
+                .align(
+                    Alignment.CenterEnd
+                )
+        )
     }
 }
 
