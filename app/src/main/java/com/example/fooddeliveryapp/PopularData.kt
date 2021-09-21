@@ -1,7 +1,10 @@
 package com.example.fooddeliveryapp
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PopularData(
     @DrawableRes val resId: Int,
     val title: String,
@@ -11,4 +14,4 @@ data class PopularData(
     val calori: Double,
     val scheduleTime: Double,
     val ingradients: List<Int>
-)
+): Parcelable

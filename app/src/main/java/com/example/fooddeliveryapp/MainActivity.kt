@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -74,7 +75,7 @@ fun HomeScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 30.dp, top = 40.dp, end = 17.dp)
+            .padding(start = 30.dp, top = 48.dp, end = 17.dp)
     ) {
         Column {
             Header()
@@ -162,10 +163,31 @@ fun DetailsScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Orange500)
+            .background(Color.White)
+            .padding(start = 30.dp, top = 48.dp, end = 30.dp),
+        contentAlignment = Alignment.Center
     )
     {
+        val data =
+            navController.previousBackStackEntry?.arguments?.getParcelable<PopularData>(Destinations.DetailArgs.foodData)
 
+        if (data != null) {
+            Text(text = data.title)
+        } else {
+            // TODO: just design
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                DetailHeader()
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.salad_pesto_pizza),
+                    contentDescription = "",
+                    modifier = Modifier.size(275.dp)
+                )
+
+            }
+        }
     }
 }
 
@@ -197,6 +219,55 @@ fun Header() {
             )
         }
         BoxWithRes(resId = R.drawable.search, description = "Search")
+    }
+}
+
+@Composable
+fun DetailHeader() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        BoxWithRes(resId = R.drawable.menu, description = "Menu")
+
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(
+                    CardItemBg
+                ), contentAlignment = Alignment.Center
+        )
+        {
+            Box(modifier = Modifier.size(24.dp))
+            {
+                Icon(
+                    painter = painterResource(id = R.drawable.bag),
+                    contentDescription = "",
+                    modifier = Modifier.size(24.dp),
+                    tint = IconColor
+                )
+                Box(
+                    modifier = Modifier
+                        .padding(top = 2.dp, end = 2.dp)
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .align(Alignment.TopEnd),
+                    contentAlignment = Alignment.Center
+                )
+                {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(Yellow500)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -373,10 +444,13 @@ fun PopularItem(popularData: PopularData, navController: NavController) {
                     .fillMaxWidth()
                     .height(176.dp)
                     .padding(end = 13.dp)
+                    .clip(RoundedCornerShape(18.dp))
                     .clickable {
+                        navController.currentBackStackEntry?.arguments = Bundle().apply {
+                            putParcelable(Destinations.DetailArgs.foodData, popularData)
+                        }
                         navController.navigate(Destinations.Detail)
                     }
-                    .clip(RoundedCornerShape(18.dp))
                     .background(
                         CardItemBg
                     )
